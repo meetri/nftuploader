@@ -44,10 +44,7 @@ def goto_add_image(
                 "key": '//span[contains(text(), "My Collections")]'
             }
         },
-        {
-            "action": "sleep",
-            "value": 1
-        },
+        {"action": "sleep", "value": 1},
         {
             "action": "click",
             "element": {
@@ -79,13 +76,8 @@ def goto_add_image(
 def add_image(
     scraper, collection="metamorphosis-butterfly",
     item_name="Moshy", item_description="bla bla bla",
-    filename="/tmp/bgtile.png"
+    filename="/tmp/bgtile.png", properties=[]
 ):
-
-    properties = [
-        {"trait": "Body", "value": "Spotted"},
-        {"trait": "Eyes", "value": "shiney"},
-    ]
 
     formula = [
         {
@@ -163,7 +155,7 @@ def add_image(
             res = scraper.handle([
                 {
                     "action": "send_keys_direct",
-                    "keys": prop["trait"]
+                    "keys": prop["trait_type"]
                 },
                 {
                     "action": "send_tab",
@@ -187,6 +179,9 @@ def add_image(
             },
             {
                 "action": "scroll_bottom"
+            },
+            {
+                "action": "sleep", "value": 1
             },
             {
                 "action": "click",
