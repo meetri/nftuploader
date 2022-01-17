@@ -3,33 +3,12 @@ import json
 from selenium.webdriver.common.keys import Keys
 
 
-def xadd_image(
-    scraper, collection="metamorphosis-butterfly",
-    item_name="Shera", item_description="bla bla bla"
-):
-
-    driver = scraper.driver
-
-    if path.exists("/tmp/cookies.json"):
-        with open("/tmp/cookies.json", "r") as inf:
-            cookies = json.loads(inf.read())
-            for cookie in cookies:
-                driver.add_cookie(cookie)
-
-    driver.get(
-        f"https://opensea.io/collection/{collection}/assets/create")
-
-    cookies = driver.get_cookies()
-    with open("/tmp/cookies.json", "w") as inf:
-        inf.write(json.dumps(cookies))
-        # print(cookies)
-
-
 def goto_add_image(
     scraper, collection="metamorphosis-butterfly"
 ):
 
     formula = [
+        {"action": "sleep", "value": 1},
         {
             "action": "moveto",
             "element": {
@@ -120,18 +99,18 @@ def add_image(
                     "type": "xpath",
                     "key": '//button[contains(@aria-label, "Add properties")]'
                 }
-            }
+            },
+            {
+                "action": "wait",
+                "element": {
+                    "type": "xpath",
+                    "key": '//button[contains(text(), "Add more")]',
+                }
+            },
         ])
 
         for prop in properties:
             res = scraper.handle([
-                {
-                    "action": "wait",
-                    "element": {
-                        "type": "xpath",
-                        "key": '//button[contains(text(), "Add more")]',
-                    }
-                },
                 {
                     "action": "click",
                     "element": {
@@ -157,32 +136,28 @@ def add_image(
                     "action": "send_keys_direct",
                     "keys": prop["trait_type"]
                 },
-                {
-                    "action": "send_tab",
-                },
+                {"action": "send_tab"},
                 {
                     "action": "send_keys_direct",
                     "keys": prop["value"]
                 },
+                {"action": "send_tab"},
+            ])
+
+        if len(properties):
+            scraper.handle([
                 {
-                    "action": "send_tab",
-                },
+                    "action": "click",
+                    "element": {
+                        "type": "xpath",
+                        "key": '//button[contains(text(), "Save")]',
+                    }
+                }
             ])
 
         res = scraper.handle([
-            {
-                "action": "click",
-                "element": {
-                    "type": "xpath",
-                    "key": '//button[contains(text(), "Save")]',
-                }
-            },
-            {
-                "action": "scroll_bottom"
-            },
-            {
-                "action": "sleep", "value": 1
-            },
+            {"action": "scroll_bottom"},
+            {"action": "sleep", "value": 1},
             {
                 "action": "click",
                 "element": {

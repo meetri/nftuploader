@@ -21,7 +21,6 @@ def create_driver_session(session_id, executor_url, options=None):
     org_command_execute = RemoteWebDriver.execute
 
     def new_command_execute(self, command, params=None):
-        print(command)
         if command == "newSession":
             # Mock the response
             return {'success': 1, 'value': None, 'sessionId': session_id}
@@ -100,7 +99,6 @@ class Scraper(object):
     def handle(self, scrapedetails):
         last_result = None
         for instruction in scrapedetails:
-            print(instruction)
             try:
                 if instruction["action"] == "get":
                     last_result = self.driver.get(instruction["url"])
@@ -124,7 +122,6 @@ class Scraper(object):
                     # last_result = action.perform()
                 elif instruction["action"] == "moveto":
                     last_result = self.getElement(instruction["element"])
-                    print(last_result)
                     action = ActionChains(self.driver)
                     action.move_to_element(last_result).perform()
                 elif instruction["action"] == "click":
@@ -141,9 +138,7 @@ class Scraper(object):
                 elif instruction["action"] == "waitclickable":
                     last_result = self.wait.until(element_to_be_clickable((By.ID, instruction["element"])))
                 elif instruction["action"] == "waitclickable_xpath":
-                    print("waiting...")
                     last_result = self.wait.until(element_to_be_clickable((By.XPATH, instruction["element"])))
-                    print(last_result)
                 elif instruction["action"] == "selector":
                     last_result = Select(self.getElement(instruction["element"])).select_by_value(instruction["value"])
                 elif instruction["action"] == "upload":
